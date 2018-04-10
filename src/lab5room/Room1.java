@@ -6,6 +6,7 @@ import lab5.EnterCondition;
 import lab5.GameState;
 import lab5.Inventory;
 import lab5.Runner;
+import user_interface.Room_UI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -31,15 +32,15 @@ public class Room1 extends JComponent implements EnterCondition {
 	private Room2 room2;
 	private BufferedImage screen;
 	private BufferedImage playerSprite;
-	private Inventory inventory;
-	private GameState gamestate;
+	private Inventory inventory = Inventory.getInstance();
+	private GameState gamestate = GameState.getInstance();;
 	private String gameText = "";
 	private int playerX;
 	private int playerY;
+	private Room_UI roomui;
 	
-	public Room1(Inventory in, GameState gs) {
-		inventory = in;
-		gamestate = gs;
+	public Room1(Room_UI roomui) {
+		this.roomui = roomui;
 		
 		try{
 			screen = ImageIO.read(new File("src/assets/room1_screen.png"));
@@ -76,7 +77,10 @@ public class Room1 extends JComponent implements EnterCondition {
         
         g2d.setFont(new Font("Power Red and Green", Font.PLAIN, 14));
         g2d.setColor(Color.black);
-        g2d.drawString(gameText, 10, 250);
+        int y = 250;
+        for(String line: gameText.split("\n")) {
+			g2d.drawString(line, 10, y += (g2d.getFontMetrics().getHeight() + 7));
+		}
 		
 	}
 	
@@ -96,13 +100,15 @@ public class Room1 extends JComponent implements EnterCondition {
 	
 	public void setGameText(String text) {
 		gameText = text;
+		
 		this.repaint();
 	}
 
 	public String entry() {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
-		pw.println("You find yourself inside a dark room.  You see a bright light towards the North.");
+		pw.println("You find yourself inside a dark room.");
+		pw.println("You see a bright light towards the North.");
 		pw.println("(Enter cardinal directions to move through rooms.)");
 
 		if (inventory.allScrollsFound())

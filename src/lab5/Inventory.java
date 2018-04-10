@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 public class Inventory {
 
+	private static Inventory inventory;
 	private boolean[] bool;
 	private ArrayList<BufferedImage> inventoryItems = new ArrayList<BufferedImage>(7);
 	
@@ -117,6 +118,13 @@ public class Inventory {
 		g2d.dispose();
 		
 		return resized;
+	}
+	
+	public static Inventory getInstance() {
+		if(inventory == null)
+			inventory = new Inventory();
+		
+		return inventory;
 	}
 
 }
