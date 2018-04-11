@@ -1,6 +1,7 @@
 package lab5;
 
 public class GameState {
+	private static GameState gamestate;
 	private boolean dead;
 	private boolean babyDead;
 	
@@ -23,5 +24,12 @@ public class GameState {
 
 	public void setBabyDead(boolean babyDead) {
 		this.babyDead = babyDead;
+	}
+	
+	public static GameState getInstance() {
+		if(gamestate == null)
+			gamestate = new GameState();
+		
+		return gamestate;
 	}
 }

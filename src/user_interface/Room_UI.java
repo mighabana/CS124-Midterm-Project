@@ -50,8 +50,8 @@ public class Room_UI extends JFrame{
 	
 	public Room_UI() {
 		textField = new JTextField();
-		inventory = Singleton.getInventory();
-		gamestate = Singleton.getGameState();
+		inventory = Inventory.getInstance();
+		gamestate = GameState.getInstance();
 		
 		this.setLayout(new BorderLayout());
 		map = new HashMap<Class, Object>();
@@ -86,14 +86,14 @@ public class Room_UI extends JFrame{
 					Class<?> dynamicType = loaded.getLoaded();
 
 					// INSTANTIATE AND USE AS NORMAL
-					Constructor constructor = dynamicType.getConstructor(Inventory.class, GameState.class);
-					Object instance = constructor.newInstance(inventory, gamestate);
+					Constructor constructor = dynamicType.getConstructor(Room_UI.class);
+					Object instance = constructor.newInstance(this);
 
 					map.put(clazz, instance);
 
 				} else {
-					Constructor constructor = clazz.getConstructor(Inventory.class, GameState.class);
-					Object instance = constructor.newInstance(inventory, gamestate);
+					Constructor constructor = clazz.getConstructor(Room_UI.class);
+					Object instance = constructor.newInstance(this);
 
 					map.put(clazz, instance);
 				}

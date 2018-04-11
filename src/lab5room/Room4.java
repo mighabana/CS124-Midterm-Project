@@ -7,6 +7,7 @@ import lab5.EnterCondition;
 import lab5.GameState;
 import lab5.Inventory;
 import lab5.Runner;
+import user_interface.Room_UI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -37,12 +38,12 @@ public class Room4 extends JComponent implements EnterCondition {
 	private BufferedImage screen, playerSprite, wizard;
 	private int playerX, playerY;
 	private String gameText;
-	private Inventory inventory;
-	private GameState gamestate;
+	private Inventory inventory = Inventory.getInstance();
+	private GameState gamestate = GameState.getInstance();
+	private Room_UI roomui;
 	
-	public Room4(Inventory i, GameState gs) {
-		inventory = i;
-		gamestate = gs;
+	public Room4(Room_UI roomui) {
+		this.roomui = roomui;
 		rand = new Random();
 		
 		try {
@@ -83,7 +84,10 @@ public class Room4 extends JComponent implements EnterCondition {
         
         g2d.setFont(new Font("Power Red and Green", Font.PLAIN, 14));
         g2d.setColor(Color.black);
-        g2d.drawString(gameText, 10, 250);
+        int y = 250;
+        for(String line: gameText.split("\n")) {
+			g2d.drawString(line, 10, y += (g2d.getFontMetrics().getHeight() + 7));
+		}
         
 	}
 

@@ -8,6 +8,7 @@ import anno.Command;
 import lab5.EnterCondition;
 import lab5.GameState;
 import lab5.Inventory;
+import user_interface.Room_UI;
 
 public class Room7 implements EnterCondition {
 	
@@ -17,17 +18,17 @@ public class Room7 implements EnterCondition {
 	private Room6 room6;
 	private Inventory inventory;
 	private GameState gamestate;
+	private Room_UI roomui;
 	
-	public Room7(Inventory i, GameState gs) {
-		inventory = i;
-		gamestate = gs;
+	public Room7(Room_UI roomui) {
+		this.roomui = roomui;
 	}
 	
 	public String entry() {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		
-		pw.println("You find yourself in a shoddy room.");
+		pw.println("You find yourself in a run down room.");
 		
 		return sw.toString();
 	}
@@ -37,11 +38,12 @@ public class Room7 implements EnterCondition {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		
-		pw.println("You see a chest in the middle of the room.");
+		pw.println("You see a chest in the middle of the room. You can walk up to it and 'openChest'.");
 		
 		return sw.toString();
 	}
 	
+	@Command(command = "openChest")
 	public String openChest() {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);

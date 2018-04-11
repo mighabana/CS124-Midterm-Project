@@ -1,13 +1,21 @@
 package lab5room;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import javax.imageio.ImageIO;
+
 import anno.Direction;
 
 import lab5.EnterCondition;
 import lab5.GameState;
 import lab5.Inventory;
-import lab5.Singleton;
+import user_interface.Room_UI;
 
 public class Room6 implements EnterCondition {
 	
@@ -18,10 +26,35 @@ public class Room6 implements EnterCondition {
 	private Room7 room7;
 	private Inventory inventory;
 	private GameState gamestate;
+	private Room_UI roomui;
+	private BufferedImage screen, playerSprite;
 	
-	public Room6(Inventory i, GameState gs) {
-		inventory = i;
-		gamestate = gs;
+	public Room6(Room_UI roomui) {
+		this.roomui = roomui;
+		
+		try {
+			screen = ImageIO.read(new File("src/assets/room1_screen.png"));
+			playerSprite = ImageIO.read(new File("src/assets/character.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		screen = resize(screen, 2);
+		playerSprite = resize(playerSprite, 2);
+	}
+	
+	public BufferedImage resize(BufferedImage img, double ratio) {
+		int newH = (int) (img.getHeight()*ratio);
+		int newW = (int) (img.getWidth()*ratio);
+		
+		Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+		BufferedImage resized = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+		
+		Graphics2D g2d = resized.createGraphics();
+		g2d.drawImage(tmp, 0, 0, null);
+		g2d.dispose();
+		
+		return resized;
 	}
 	
 
