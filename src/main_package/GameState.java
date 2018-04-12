@@ -25,8 +25,7 @@ public class GameState {
     }
     
     public boolean allWordsFound() {
-        return true;
-        //return room3WordFound && room4WordFound && room9WordFound;
+        return room3WordFound && room4WordFound && room9WordFound;
     }
 
     public boolean isDead() {
