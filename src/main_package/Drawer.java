@@ -99,7 +99,7 @@ public class Drawer extends JFrame {
         }
         
         GameState gameState = GameState.getInstance();
-        gameState.setCurrRoom(logicMap.get(Room9.class));
+        gameState.setCurrRoom(logicMap.get(Room1.class));
         
         String out = (String) invokeEntry(gameState.getCurrRoom());
         
