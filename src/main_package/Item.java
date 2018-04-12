@@ -30,9 +30,9 @@ public class Item {
         try {
             bi = ImageIO.read(new File(path));
             if(name.equals("ala") || name.equals("ka") || name.equals("zam")) {
-            		UI_Manager.resize(bi, 0.1254902);
+            		bi = UI_Manager.resize(bi, 0.1254902);
             } else {
-            		UI_Manager.resize(bi, 2);
+            		bi = UI_Manager.resize(bi, 2);
             }
             UI_Manager.resize(bi, 2);
         } catch (IOException ex) {

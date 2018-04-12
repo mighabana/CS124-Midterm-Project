@@ -34,7 +34,7 @@ public class Room5Component extends RoomComponent {
         mamaTroll = UI_Manager.resize(mamaTroll, 3);
         
         playerX = 220;
-        playerY = 110;
+        playerY = 150;
     }
 
     public void paintComponent(Graphics g) {

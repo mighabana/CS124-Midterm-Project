@@ -39,14 +39,14 @@ public class InventoryComponent {
         g2d.drawString("Inventory", 485, 20);
         
         int[][] coordinates = {
-            {475, 75},
-            {550, 75},
-            {475, 152},
-            {550, 152},
-            {475, 229},
-            {550, 229},
-            {475, 306},
-            {550, 306},
+            {475, 55},
+            {550, 55},
+            {475, 132},
+            {550, 132},
+            {475, 209},
+            {550, 209},
+            {475, 286},
+            {550, 286},
         };
         
         ArrayList<Item> items = Inventory.getInstance().getItems();
