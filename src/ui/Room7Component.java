@@ -39,6 +39,8 @@ public class Room7Component extends RoomComponent {
         playerSprite = UI_Manager.resize(playerSprite, 2);
         chest = UI_Manager.resize(chest, 2);
         openedChest = UI_Manager.resize(openedChest, 2);
+        playerX = 220;
+        playerY = 110;
     }
 
     public void paintComponent(Graphics g) {

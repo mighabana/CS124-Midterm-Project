@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import ui.UI_Manager;
+
 /**
  *
  * @author Luis Ligunas
@@ -12,7 +14,7 @@ import javax.imageio.ImageIO;
 public class Item {
     public static final String SWORD = "sword",
                                 TORCH = "torch",
-                                BOMB = "explosives",
+                                BOMB = "bomb",
                                 ENCHANTED_SWORD = "enchanted_sword",
                                 WORD1 = "ala",
                                 WORD2 = "ka",
@@ -27,6 +29,12 @@ public class Item {
         this.path = path;
         try {
             bi = ImageIO.read(new File(path));
+            if(name.equals("ala") || name.equals("ka") || name.equals("zam")) {
+            		UI_Manager.resize(bi, 0.1254902);
+            } else {
+            		UI_Manager.resize(bi, 2);
+            }
+            UI_Manager.resize(bi, 2);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

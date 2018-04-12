@@ -38,12 +38,12 @@ public class Room5 extends Room implements EnterCondition {
         if (gameState.allWordsFound()) {
             pw.println("You enter a long tunnel which opens into a large chamber.");
             pw.println("You can see an opening to the outside on the other side.");
-            pw.println("As you walk towards it, a large dragon head peers from the opening.");
+            pw.println("As you walk towards it, a large troll head peers from the opening.");
             pw.println("'What is the passphrase?' it asks.");
             pw.println(help());
         } else {
             pw.println("You are not allowed in this room.");
-            pw.println("A ball of fire turns you to ash...");
+            pw.println("A huge fist comes crashing down flattening you...");
             gameState.setDead(true);
         }
 
@@ -57,8 +57,8 @@ public class Room5 extends Room implements EnterCondition {
         GameState gameState = GameState.getInstance();
         
         if (gameState.isSwordTaken()) {
-            pw.println("You charge to attack the dragon brandishing your sword.");
-            pw.println("The dragon breathes fire into the chamber turning you to ash... The End.");
+            pw.println("You charge to attack the troll brandishing your sword.");
+            pw.println("The troll squashes you flattening you like a pancake... The End.");
             gameState.setDead(true);
         } else {
             pw.println("In a flash of wisdom, you resist.");
@@ -81,17 +81,17 @@ public class Room5 extends Room implements EnterCondition {
         if ((word.equalsIgnoreCase("AlaKaZam"))) {
             if (gameState.isBabyIsDead()) {
                 pw.println("That is correct.");
-                pw.println("The dragon breathes fire into the chamber turning you to ash for killing her baby... The End.");
+                pw.println("The troll squashes you like a pancake for killing her baby... The End.");
                 gameState.setDead(true);
             } else {
                 pw.println("That is correct.");
-                pw.println("The dragon allows you to pass and you escape...");
+                pw.println("The troll allows you to pass and you escape...");
                 pw.println("Congratulations on your 10pts.");
                 gameState.setDead(true);
             }
         } else {
             pw.println("That is incorrect.");
-            pw.println("The dragon breathes fire into the chamber turning you to ash... The End.");
+            pw.println("The troll squashes you flattening you like a pancake... The End.");
             gameState.setDead(true);
         }
 
@@ -102,7 +102,7 @@ public class Room5 extends Room implements EnterCondition {
     public String look() {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        pw.println("There is no way around the dragon.");
+        pw.println("There is no way around the troll.");
 
         return sw.toString();
     }

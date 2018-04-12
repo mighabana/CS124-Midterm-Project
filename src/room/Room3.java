@@ -41,7 +41,7 @@ public class Room3 extends Room{
         GameState.getInstance().setCurrRoom(this);
         
         pw.println("You enter a large cavern and hear deep laboured breathing.");
-        pw.println("In the center of the chamber is small baby dragon sleeping on a big pile of gold coins.");
+        pw.println("In the center of the chamber is small baby troll sleeping.");
         pw.println(help());
 
         if (GameState.getInstance().allWordsFound())
@@ -58,11 +58,11 @@ public class Room3 extends Room{
         
         if (gameState.isSwordTaken()) {
             gameState.setBabyIsDead(true);
-            pw.println("You charge the baby dragon with your bright shiny sword.");
+            pw.println("You charge the baby troll with your bright shiny sword.");
             pw.println("You cleave its head clean off.");
             pw.println("You can 'look' around.");
         } else {
-            pw.println("You charge the baby dragon and try to take in on with your bare hands.");
+            pw.println("You charge the baby troll and try to take in on with your bare hands.");
             pw.println("Its wakes and bites your head clean off... The End");
             gameState.setDead(true);
         }
@@ -81,14 +81,14 @@ public class Room3 extends Room{
             chestFound = true;
 
             if (!babyDead) {
-                pw.println("You quietly avoid the baby dragon and make your way to the other side of the chamber and find a chest.");
+                pw.println("You quietly avoid the baby troll and make your way to the other side of the chamber and find a chest.");
                 pw.println("You can 'openChest'");
             } else {
                 pw.println("You make your way to the other side of the chamber and find a chest.");
                 pw.println("You can 'openChest'");
             }
         } else if (!babyDead) {
-            pw.println("Other than the sleeping baby dragon.  There is nothing of interest.");
+            pw.println("Other than the sleeping baby troll.  There is nothing of interest.");
         } else {
             pw.println("There is nothing of interest.");
         }

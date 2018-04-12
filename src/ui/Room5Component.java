@@ -14,7 +14,7 @@ import room.Room5;
  */
 public class Room5Component extends RoomComponent {
 
-    private BufferedImage screen1, playerSprite;
+    private BufferedImage screen1, playerSprite, mamaTroll;
     private int playerX, playerY;
     
     private Room5 room5;
@@ -24,12 +24,17 @@ public class Room5Component extends RoomComponent {
         try {
             screen1 = ImageIO.read(new File("src/assets/room6_screen.png"));
             playerSprite = ImageIO.read(new File("src/assets/character.png"));
+            mamaTroll = ImageIO.read(new File("src/assets/mama_troll.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         screen1 = UI_Manager.resize(screen1, 2);
         playerSprite = UI_Manager.resize(playerSprite, 2);
+        mamaTroll = UI_Manager.resize(mamaTroll, 3);
+        
+        playerX = 220;
+        playerY = 110;
     }
 
     public void paintComponent(Graphics g) {
@@ -46,6 +51,7 @@ public class Room5Component extends RoomComponent {
 
         g2d.drawImage(screen1, 0, 0, null);
         g2d.drawImage(playerSprite, playerX, playerY, null);
+        g2d.drawImage(mamaTroll, 220, 50, null);
 
         g2d.setFont(new Font("Power Red and Green", Font.PLAIN, 20));
         g2d.setColor(Color.WHITE);
