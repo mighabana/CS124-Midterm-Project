@@ -40,7 +40,7 @@ public class Drawer extends JFrame {
         final String packageName = "room";
         FastClasspathScanner scanner = new FastClasspathScanner(packageName);
         ScanResult result = scanner.scan();
-        List<String> allClasses = result.getNamesOfAllClasses();
+        List<String> allClasses = result.getNamesOfAllStandardClasses();
         drawer = this;
         logicMap = new HashMap<>();
         uiMap = new HashMap<>();

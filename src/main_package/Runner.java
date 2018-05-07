@@ -14,7 +14,7 @@ public class Runner {
     public static void main(String[] args) throws IOException {
         
         Drawer drawer = new Drawer();
-        drawer.setSize(620, 420);
+        drawer.setSize(620, 450);
         drawer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         drawer.setVisible(true);	
         drawer.reset();
