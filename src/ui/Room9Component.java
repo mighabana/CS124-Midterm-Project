@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import main_package.GameState;
 import main_package.RoomComponent;
 import room.Room9;
 
@@ -61,7 +63,7 @@ public class Room9Component extends RoomComponent {
         g2d.drawImage(screen, 0, 0, null);
         g2d.drawImage(playerSprite, playerX, playerY, null);
 
-        if (!room9.isMonsterKilled()) {
+        if (!GameState.getInstance().isMonsterKilled()) {
             g2d.drawImage(monster, 280, 110, null);
         }
 

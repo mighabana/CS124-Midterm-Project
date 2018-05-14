@@ -8,6 +8,7 @@ import main_package.Direction;
 import main_package.GameState;
 import main_package.Inventory;
 import main_package.Item;
+import main_package.LocalState;
 import main_package.Room;
 import main_package.Drawer;
 import ui.InventoryComponent;
@@ -23,7 +24,10 @@ public class Room8 extends Room {
 
     private Drawer runner;
 
-    private boolean magicDiscovered, bombUsed;
+    @LocalState(name = "magicDiscovered")
+    private boolean magicDiscovered;
+    @LocalState(name = "bombUsed")
+    private boolean bombUsed;
 
     public Room8(Drawer runner) {
         this.runner = runner;
@@ -121,5 +125,18 @@ public class Room8 extends Room {
         String out = Room.formatDirections(directions) + "\n" + getFormattedCommands() + "\n" + getFormattedItems();
         
         return out;
+    }
+    
+    @Override
+    public void updateStates(String[] localStates) {
+    		magicDiscovered = Boolean.parseBoolean(localStates[0]);
+    		bombUsed = Boolean.parseBoolean(localStates[1]);
+    }
+    
+    @Override
+    public boolean[] getStates() {
+    		boolean[] output = {magicDiscovered, bombUsed};
+    		
+    		return output;
     }
 }

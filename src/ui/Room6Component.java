@@ -5,6 +5,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import main_package.GameState;
 import main_package.RoomComponent;
 import room.Room6;
 
@@ -45,7 +47,7 @@ public class Room6Component extends RoomComponent {
             e.printStackTrace();
         }
 
-        if (!room6.isTorchUsed()) {
+        if (GameState.getInstance().isTorchUsed()) {
             g2d.drawImage(screen1, 0, 0, null);
         } else {
             g2d.drawImage(screen2, 0, 0, null);

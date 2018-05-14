@@ -27,14 +27,18 @@ public class Drawer extends JFrame {
 
     private HashMap<Class, Object> logicMap;
     private HashMap<Class, Object> uiMap;
+    
+    private GameState gameState;
+    private GlobalCommands globalCommands;
+    private State state;
 
     private JTextField textField;
     
     public static Drawer drawer;
     private String lastInput;
 
-    public String reset() {
-        textField = new JTextField();
+    public Drawer() {
+    	textField = new JTextField();
         setLayout(new BorderLayout());
         
         final String packageName = "room";
@@ -44,6 +48,9 @@ public class Drawer extends JFrame {
         drawer = this;
         logicMap = new HashMap<>();
         uiMap = new HashMap<>();
+        globalCommands = new GlobalCommands(this);
+        state = new RegistrationState();
+        state.setContext(this);
 
         for (String s : allClasses) {
             if (!s.split("\\.")[0].equals(packageName)) {
@@ -98,22 +105,36 @@ public class Drawer extends JFrame {
             //if(entry.getValue())
         }
         
-        GameState gameState = GameState.getInstance();
+        gameState = GameState.getInstance();
         gameState.setCurrRoom(logicMap.get(Room1.class));
         
-        String out = (String) invokeEntry(gameState.getCurrRoom());
+        reset();
+    }
+    
+    public String reset() {
+        boolean[] tempStates = (boolean[]) invokeMethod("getStates", logicMap.get(gameState.getCurrRoom().getClass()), null, null);
+        gameState.setLocalStates(tempStates);
         
-        invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), (String) invokeEntry(gameState.getCurrRoom()));
+        String out = state.outputPrompt();
+        if(out != null) {
+        		invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), out);
+        } else {
+        		invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), (String) invokeEntry(gameState.getCurrRoom()));
+        }
+        
         paint();
         return out;
     }
 
-    public String processInput(String inp) {
+    public String processInput(String input) {
         if(GameState.getInstance().isDead()) {
             reset();
             return null;
         }
-        lastInput = inp;
+        lastInput = input;
+        
+        String inp = state.processInput(input, globalCommands);
+        
         GameState gameState = GameState.getInstance();
         Object currRoom = gameState.getCurrRoom();
         Class currClass = currRoom.getClass();
@@ -142,6 +163,10 @@ public class Drawer extends JFrame {
                         this.remove((Component) uiMap.get(currRoom.getClass()));
                         this.add((Component) uiMap.get(roomClass));
                         invokeSetText(uiMap.get(roomClass), prompt);
+                        
+                        boolean[] tempStates = (boolean[]) invokeMethod("getStates", room, null, null);
+                        
+                        gameState.setLocalStates(tempStates);
                     }
                     else {
                         invokeSetText(uiMap.get(currClass), prompt);
@@ -151,6 +176,18 @@ public class Drawer extends JFrame {
                     return prompt;
                 }
             }
+        }
+        
+        //look for global commands
+        for(Method method : GlobalCommands.class.getDeclaredMethods()){
+        		if(method.isAnnotationPresent(Command.class)) {
+        			String command = method.getAnnotation(Command.class).command();
+        			
+        			if(inp.matches(command)) {
+        				invokeMethod(command, globalCommands, null, null);
+        				return "";
+        			}
+        		}
         }
 
         //look for the commands
@@ -169,6 +206,11 @@ public class Drawer extends JFrame {
                             currClass = currClass.getSuperclass();
                         
                         invokeSetText(uiMap.get(currClass), outString);
+                        
+                        boolean[] tempStates = (boolean[]) invokeMethod("getStates", logicMap.get(currClass), null, null);
+                        
+                        gameState.setLocalStates(tempStates);
+                        
                         return outString;
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -179,6 +221,7 @@ public class Drawer extends JFrame {
             }
         }
         
+        // BUG: return within the above checks does not exit the method which makes the code below execute replacing the ui text
         invokeSetText(uiMap.get(GameState.getInstance().getCurrRoom().getClass()), "That did nothing. Type 'help' to see what you can do.");
         
         return "That did nothing. Type 'help' to see what you can do.";
@@ -209,10 +252,19 @@ public class Drawer extends JFrame {
     private static Object invokeEntry(Object obj) {
         return invokeMethod("entry", obj, null, null);
     }
+    
+    public void updateState(String[] localStates, Class currRoom) {	
+    		Class[] inpClass = {String[].class};
+    		Object[] inpArgs = {localStates};
+    		
+    		this.getContentPane().removeAll();
+    		invokeMethod("updateStates", logicMap.get(currRoom), inpClass, inpArgs);
+    		reset();
+    }
 
     private static Object invokeMethod(String method, Object obj, Class[] classes, Object[] args) {
         try {
-            Method m = obj.getClass().getDeclaredMethod(method, classes);
+            Method m = obj.getClass().getMethod(method, classes);
             m.setAccessible(true); //line is unnecessary when method is not private
 
             return m.invoke(obj, args);
@@ -236,6 +288,7 @@ public class Drawer extends JFrame {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 if(GameState.getInstance().isDead())
                     System.exit(0);
+                //System.out.println(processInput(textField.getText()));
                 processInput(textField.getText());
                 textField.setText("");
             }
@@ -248,4 +301,13 @@ public class Drawer extends JFrame {
         }
         
     }
+
+	public HashMap<Class, Object> getLogicMap() {
+		return logicMap;
+	}
+	
+	public void setState(State state) {
+		this.state = state;
+		state.setContext(this);
+	}
 }

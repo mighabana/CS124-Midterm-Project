@@ -7,6 +7,7 @@ import main_package.Command;
 import main_package.Direction;
 import main_package.GameState;
 import main_package.Item;
+import main_package.LocalState;
 import main_package.Room;
 import main_package.Drawer;
 import ui.InventoryComponent;
@@ -28,6 +29,7 @@ public class Room3 extends Room{
     
     private Drawer runner;
     
+    @LocalState(name = "chestFound")
     private boolean chestFound;
     
     public Room3(Drawer runner) {
@@ -151,5 +153,17 @@ public class Room3 extends Room{
         itemName = itemName.substring(itemName.indexOf("use") + 4);
         
         return useItem(itemName);
+    }
+    
+    @Override
+    public void updateStates(String[] localStates) {
+    		chestFound = Boolean.parseBoolean(localStates[0]);
+    }
+    
+    @Override
+    public boolean[] getStates() {
+    		boolean[] output = {chestFound};
+    		
+    		return output;
     }
 }

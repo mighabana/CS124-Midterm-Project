@@ -20,7 +20,6 @@ public class Room6 extends Room {
     private Room7 room7;
 
     private Drawer runner;
-    private boolean torchUsed;
 
     public Room6(Drawer runner) {
         this.runner = runner;
@@ -46,7 +45,7 @@ public class Room6 extends Room {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         
-        if (torchUsed) {
+        if (GameState.getInstance().isTorchUsed()) {
             pw.println("You see what seems to have been an entrance on the east side of the room but is now being covered by a big rock.");
             pw.println("To the south, you see another entrance that looks a bit run down but you could probably still slip through.");
         } else {
@@ -62,7 +61,7 @@ public class Room6 extends Room {
         ArrayList<String> directions = getDirectionsList();
         //remove things from commands and directions that are not allowed by state
         
-        if(!torchUsed)
+        if(!GameState.getInstance().isTorchUsed())
             directions.remove("South");
         
         String out = Room.formatDirections(directions) + "\n" + getFormattedCommands() + "\n" + getFormattedItems();
@@ -82,7 +81,7 @@ public class Room6 extends Room {
             return Inventory.ITEM_NOT_IN_INVENTORY_STRING;
         
         if(itemName.equals(Item.TORCH)) {
-            torchUsed = true;
+            GameState.getInstance().setTorchUsed(true);
             return "Your torch turns on and you can see the room better.";
         }
         
@@ -96,9 +95,4 @@ public class Room6 extends Room {
         
         return takeItem(itemString);
     }
-
-    public boolean isTorchUsed() {
-        return torchUsed;
-    }
-    
 }

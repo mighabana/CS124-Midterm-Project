@@ -7,6 +7,7 @@ import main_package.Command;
 import main_package.Direction;
 import main_package.GameState;
 import main_package.Item;
+import main_package.LocalState;
 import main_package.Room;
 import main_package.Drawer;
 import main_package.Inventory;
@@ -25,7 +26,10 @@ public class Room7 extends Room {
     
     private Drawer runner;
 
-    private boolean lookedAround, isChestOpen;
+    @LocalState(name = "lookedAround")
+    private boolean lookedAround;
+    @LocalState(name = "isChestOpen")
+    private boolean isChestOpen;
 
     public Room7(Drawer runner) {
         this.runner = runner;
@@ -103,6 +107,17 @@ public class Room7 extends Room {
 
     public boolean isIsChestOpen() {
         return isChestOpen;
+    }
+    
+    @Override
+    public void updateStates(String[] localStates) {
+    		lookedAround = Boolean.parseBoolean(localStates[0]);
+    		isChestOpen = Boolean.parseBoolean(localStates[1]);
+    }
+    
+    public boolean[] getStates() {
+    		boolean[] output = {lookedAround, isChestOpen};
+    		return output;
     }
     
 }

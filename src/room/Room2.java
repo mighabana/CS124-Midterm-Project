@@ -7,6 +7,7 @@ import main_package.Command;
 import main_package.Direction;
 import main_package.GameState;
 import main_package.Item;
+import main_package.LocalState;
 import main_package.Room;
 import main_package.Drawer;
 import ui.InventoryComponent;
@@ -23,7 +24,13 @@ public class Room2 extends Room {
     private Room3 room3;
     
     private Drawer runner;
-    private boolean inPool, graveFound, torchFound;
+    
+    @LocalState(name = "inPool")
+    private boolean inPool;
+    @LocalState(name = "graveFound")
+    private boolean graveFound;
+    @LocalState(name = "torchFound")
+    private boolean torchFound;
     
     public Room2(Drawer runner) {
         this.runner = runner;
@@ -143,5 +150,19 @@ public class Room2 extends Room {
         itemName = itemName.substring(itemName.indexOf("use") + 4);
         
         return useItem(itemName);
+    }
+    
+    @Override
+    public void updateStates(String[] localStates) {
+    		inPool = Boolean.parseBoolean(localStates[0]);
+    		graveFound = Boolean.parseBoolean(localStates[1]);
+    		torchFound = Boolean.parseBoolean(localStates[2]);
+    }
+    
+    @Override
+    public boolean[] getStates() {
+    		boolean[] output = {inPool, graveFound, torchFound};
+    		
+    		return output;
     }
 }

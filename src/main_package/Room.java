@@ -152,4 +152,12 @@ public class Room {
         return out;
     }
     
+    public void updateStates(String[] localStates) {
+		
+    }
+    
+    public boolean[] getStates() {
+    		return null;
+    }
+    
 }

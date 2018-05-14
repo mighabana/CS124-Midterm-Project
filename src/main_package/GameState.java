@@ -3,10 +3,12 @@ package main_package;
 
 public class GameState {
     private static GameState gameState;
-    private Object currRoom;
     
-    private boolean dead, babyIsDead, swordTaken, torchTaken, swordEnchanted;
+    private String username;
+    private Object currRoom;
+    private boolean dead, babyIsDead, swordTaken, torchTaken, swordEnchanted, torchUsed, monsterKilled;
     private boolean room3WordFound, room4WordFound, room9WordFound;
+    private boolean[] localStates;
     
     //private GameState() 
     
@@ -47,10 +49,20 @@ public class GameState {
     public void setRoom3WordFound(boolean room3WordFound) {
         this.room3WordFound = room3WordFound;
     }
+   
 
-    public void setRoom4WordFound(boolean room4WordFound) {
+    public boolean isRoom3WordFound() {
+		return room3WordFound;
+	}
+
+
+	public void setRoom4WordFound(boolean room4WordFound) {
         this.room4WordFound = room4WordFound;
     }
+	
+	public boolean isRoom4WordFound() {
+		return room4WordFound;
+	}
 
     public boolean isSwordTaken() {
         return swordTaken;
@@ -83,6 +95,38 @@ public class GameState {
     public void setRoom9WordFound(boolean room9WordFound) {
         this.room9WordFound = room9WordFound;
     }
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public boolean[] getLocalStates() {
+		return localStates;
+	}
+
+	public void setLocalStates(boolean[] localStates) {
+		this.localStates = localStates;
+	}
+
+	public boolean isTorchUsed() {
+		return torchUsed;
+	}
+
+	public void setTorchUsed(boolean torchUsed) {
+		this.torchUsed = torchUsed;
+	}
+
+	public boolean isMonsterKilled() {
+		return monsterKilled;
+	}
+
+	public void setMonsterKilled(boolean monsterKilled) {
+		this.monsterKilled = monsterKilled;
+	}
     
     
 }

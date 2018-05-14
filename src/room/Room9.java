@@ -7,6 +7,7 @@ import main_package.Direction;
 import main_package.GameState;
 import main_package.Inventory;
 import main_package.Item;
+import main_package.LocalState;
 import main_package.Room;
 import main_package.Drawer;
 import ui.InventoryComponent;
@@ -22,7 +23,8 @@ public class Room9 extends Room {
 
     private Drawer runner;
 
-    private boolean monsterKilled, isChestOpened;
+    @LocalState(name = "isChestOpened")
+    private boolean isChestOpened;
 
     public Room9(Drawer runner) {
         this.runner = runner;
@@ -46,7 +48,7 @@ public class Room9 extends Room {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
 
-        if (!monsterKilled) {
+        if (!GameState.getInstance().isMonsterKilled()) {
             pw.println("You might want to deal with the monster first!");
         } else {
             pw.println("You can open the chest in peace now.");
@@ -67,7 +69,7 @@ public class Room9 extends Room {
             pw.println("From the ashes of the monster you see a key");
             addItemToRoom(Item.KEY, new Item(Item.KEY, InventoryComponent.ROOT_PATH + "key.png"));
             takeItem(Item.KEY);
-            monsterKilled = true;
+            GameState.getInstance().setMonsterKilled(true);
         } else {
             pw.println("You strike at the monster with your sword but nothing happens.");
             pw.println("It strikes back with ferocity and kills you.");
@@ -81,7 +83,7 @@ public class Room9 extends Room {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         
-        if (monsterKilled) {
+        if (GameState.getInstance().isMonsterKilled()) {
             pw.println("You open the chest and inside it you find a scroll.");
             pw.println("The remaining word says 'Zam'");
             isChestOpened = true;
@@ -119,11 +121,19 @@ public class Room9 extends Room {
         return super.help();
     }
 
-    public boolean isMonsterKilled() {
-        return monsterKilled;
-    }
-
     public boolean isIsChestOpened() {
         return isChestOpened;
+    }
+    
+    @Override
+    public void updateStates(String[] localStates) {
+    		isChestOpened = Boolean.parseBoolean(localStates[0]);
+    }
+    
+    @Override
+    public boolean[] getStates() { 
+    		boolean[] output = {isChestOpened};
+    		
+    		return output;
     }
 }
