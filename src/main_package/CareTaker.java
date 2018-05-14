@@ -47,7 +47,7 @@ public class CareTaker {
 		BufferedReader reader = null;
 		
 		try {
-			//bw = new BufferedWriter(new FileWriter(new File("Lab5-savefile.txt")));
+			bw = new BufferedWriter(new FileWriter(new File("Lab5-savefile.txt")));
 			reader = new BufferedReader(new FileReader(new File("Lab5-savefile.txt")));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -90,7 +90,6 @@ public class CareTaker {
 		try {
 			
 			line = reader.readLine();
-			System.out.println(line);
 			while(line != null) {
 				if(line.contains(username)) {
 					update = true;
@@ -105,16 +104,14 @@ public class CareTaker {
 				
 				line = reader.readLine();
 			}
-			System.out.println(line);
-			
-			reader.close();
 			
 			if(!update) {
 				output.append(sb.toString());
-			}		
+			}
 			
-			//bw.write(output.toString());
-			//bw.close();
+			reader.close();
+			bw.write(output.toString());
+			bw.close();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
