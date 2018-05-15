@@ -52,6 +52,8 @@ public class GlobalCommands {
 		try {
 			String[] s = load.get(CareTaker.LOCAL_STATES_KEY);
 			runner.updateState(s, Class.forName(load.get(CareTaker.CUR_ROOM_KEY)[0]));
+			runner.invokeSetText(runner.getUIMap().get(gs.getCurrRoom().getClass()),((Room) runner.getLogicMap().get(gs.getCurrRoom().getClass())).help());
+			runner.reset();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

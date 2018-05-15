@@ -48,7 +48,6 @@ public class CareTaker {
         BufferedReader reader = null;
 
         try {
-            bw = new BufferedWriter(new FileWriter(new File("Lab5-savefile.txt")));
             reader = new BufferedReader(new FileReader(new File("Lab5-savefile.txt")));
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -83,6 +82,8 @@ public class CareTaker {
                     sb.append(localStates[i] + ";");
                 }
             }
+        } else {
+        		sb.append("\n");
         }
         
         boolean update = false;
@@ -92,22 +93,24 @@ public class CareTaker {
                 if (line.indexOf(USERNAME_KEY + ":" + username) == 0) {
                     update = true;
 
-                    line = line.replace(line, sb.toString());
+                    line =  sb.toString();
                     System.out.println(line);
-                    output.append(line);
+                    output.append(line + "\n");
                 } else {
                     System.out.println(line);
-                    output.append(line);
+                    output.append(line + "\n");
                 }
 
                 line = reader.readLine();
             }
 
             if (!update) {
-                output.append(sb.toString());
+                output.append(sb.toString() + "\n");
             }
 
             reader.close();
+            
+            bw = new BufferedWriter(new FileWriter(new File("Lab5-savefile.txt")));
             bw.write(output.toString());
             bw.close();
 
@@ -133,18 +136,23 @@ public class CareTaker {
         try {
             line = reader.readLine();
             while (line != null) {
-                if (line.contains(username)) {
+            		System.out.println("1");
+                if (line.indexOf(USERNAME_KEY + ":" + username) == 0) {
                     String[] output = line.split(",");
                     for (int i = 0; i < output.length; i++) {
                         String[] temp1 = output[i].split(":");
-                        String[] temp2 = {temp1[1]};
-                        if (temp1[1].contains(";")) {
-                            temp2 = temp1[1].split(";");
+                        String[] temp2 = null;
+                        if(temp1.length > 1) {
+                        		temp2 = new String[] {temp1[1]};
+                        		if (temp1[1].contains(";")) {
+                            		temp2 = temp1[1].split(";");
+                        		}
                         }
                         map.put(temp1[0], temp2);
                     }
                     break;
                 }
+                line = reader.readLine();
             }
 
         } catch (IOException e) {

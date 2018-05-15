@@ -43,8 +43,6 @@ public class Drawer extends JFrame {
         setLayout(new BorderLayout());
         textField = new JTextField();
         textField.addKeyListener(new TextFieldListener());
-        this.add(textField, BorderLayout.PAGE_END);
-
         final String packageName = "room";
         FastClasspathScanner scanner = new FastClasspathScanner(packageName);
         ScanResult result = scanner.scan();
@@ -139,6 +137,7 @@ public class Drawer extends JFrame {
 
     public void paint() {
         add((Component) uiMap.get(GameState.getInstance().getCurrRoom().getClass()));
+        	this.add(textField, BorderLayout.PAGE_END);
         this.validate();
     }
 

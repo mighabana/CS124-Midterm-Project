@@ -1,1 +1,5 @@
 username:steve,currRoom:room.Room2,isDead:false,isBabyDead:false,isSwordTaken:false,isTorchTaken:false,isSwordEnchanted:false,isTorchUsed:false,isMonsterKilled:false,isRoom3WordFound:false,isRoom4WordFound:false,isRoom9WordFound:false,localStates:true;false;false
+
+username:miguel,currRoom:room.Room2,isDead:false,isBabyDead:false,isSwordTaken:false,isTorchTaken:false,isSwordEnchanted:false,isTorchUsed:false,isMonsterKilled:false,isRoom3WordFound:false,isRoom4WordFound:false,isRoom9WordFound:false,localStates:false;false;false
+
+
