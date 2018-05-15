@@ -1,5 +1,7 @@
 package main_package;
 
+import state.RegistrationState;
+import state.State;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 import java.awt.BorderLayout;
@@ -27,20 +29,22 @@ public class Drawer extends JFrame {
 
     private HashMap<Class, Object> logicMap;
     private HashMap<Class, Object> uiMap;
-    
+
     private GameState gameState;
     private GlobalCommands globalCommands;
     private State state;
 
     private JTextField textField;
-    
+
     public static Drawer drawer;
     private String lastInput;
 
     public Drawer() {
-    	textField = new JTextField();
         setLayout(new BorderLayout());
-        
+        textField = new JTextField();
+        textField.addKeyListener(new TextFieldListener());
+        this.add(textField, BorderLayout.PAGE_END);
+
         final String packageName = "room";
         FastClasspathScanner scanner = new FastClasspathScanner(packageName);
         ScanResult result = scanner.scan();
@@ -49,8 +53,6 @@ public class Drawer extends JFrame {
         logicMap = new HashMap<>();
         uiMap = new HashMap<>();
         globalCommands = new GlobalCommands(this);
-        state = new RegistrationState();
-        state.setContext(this);
 
         for (String s : allClasses) {
             if (!s.split("\\.")[0].equals(packageName)) {
@@ -89,7 +91,7 @@ public class Drawer extends JFrame {
             }
         }
         //map now contains all classes
-        
+
         uiMap.put(Room1.class, new Room1Component((Room1) logicMap.get(Room1.class)));
         uiMap.put(Room2.class, new Room2Component((Room2) logicMap.get(Room2.class)));
         uiMap.put(Room3.class, new Room3Component((Room3) logicMap.get(Room3.class)));
@@ -100,137 +102,43 @@ public class Drawer extends JFrame {
         uiMap.put(Room8.class, new Room8Component((Room8) logicMap.get(Room8.class)));
         uiMap.put(Room9.class, new Room9Component((Room9) logicMap.get(Room9.class)));
         uiMap.put(Room10.class, new Room10Component((Room10) logicMap.get(Room10.class)));
-        
-        for(Map.Entry<Class, Object> entry : uiMap.entrySet()) {
+
+        for (Map.Entry<Class, Object> entry : uiMap.entrySet()) {
             //if(entry.getValue())
         }
-        
+
         gameState = GameState.getInstance();
         gameState.setCurrRoom(logicMap.get(Room1.class));
         
+        setState(new RegistrationState());
+        invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), state.outputPrompt());
+
         reset();
     }
-    
+
     public String reset() {
         boolean[] tempStates = (boolean[]) invokeMethod("getStates", logicMap.get(gameState.getCurrRoom().getClass()), null, null);
         gameState.setLocalStates(tempStates);
-        
-        String out = state.outputPrompt();
-        if(out != null) {
-        		invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), out);
+
+        /*String out = state.outputPrompt();
+        if (out != null) {
+            invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), out);
         } else {
-        		invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), (String) invokeEntry(gameState.getCurrRoom()));
-        }
-        
+            invokeSetText(uiMap.get(gameState.getCurrRoom().getClass()), (String) invokeEntry(gameState.getCurrRoom()));
+        }*/
+
         paint();
-        return out;
+        return state.outputPrompt();
     }
 
     public String processInput(String input) {
-        if(GameState.getInstance().isDead()) {
-            reset();
-            return null;
-        }
         lastInput = input;
-        
-        String inp = state.processInput(input, globalCommands);
-        
-        GameState gameState = GameState.getInstance();
-        Object currRoom = gameState.getCurrRoom();
-        Class currClass = currRoom.getClass();
-
-        if (currClass.getSuperclass() != Room.class) {
-            currClass = currClass.getSuperclass();
-        }
-
-        //look for the directions
-        Field[] fields = currClass.getDeclaredFields();
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(Direction.class)) {
-
-                String command = field.getAnnotation(Direction.class).command();
-
-                if (inp.matches(command)) {
-                    Object room = logicMap.get(field.getType());
-                    String prompt = (String) invokeEntry(room);
-                    
-                    Class roomClass = room.getClass();
-                    if(roomClass.getSuperclass() != Room.class)
-                        roomClass = roomClass.getSuperclass();
-                    
-                    if(prompt.indexOf("error") != 0) {
-                        //success
-                        this.remove((Component) uiMap.get(currRoom.getClass()));
-                        this.add((Component) uiMap.get(roomClass));
-                        invokeSetText(uiMap.get(roomClass), prompt);
-                        
-                        boolean[] tempStates = (boolean[]) invokeMethod("getStates", room, null, null);
-                        
-                        gameState.setLocalStates(tempStates);
-                    }
-                    else {
-                        invokeSetText(uiMap.get(currClass), prompt);
-                    }
-                    
-                    repaint();
-                    return prompt;
-                }
-            }
-        }
-        
-        //look for global commands
-        for(Method method : GlobalCommands.class.getDeclaredMethods()){
-        		if(method.isAnnotationPresent(Command.class)) {
-        			String command = method.getAnnotation(Command.class).command();
-        			
-        			if(inp.matches(command)) {
-        				invokeMethod(command, globalCommands, null, null);
-        				return "";
-        			}
-        		}
-        }
-
-        //look for the commands
-        Method[] methods = currClass.getDeclaredMethods();
-        for (Method method : methods) {
-
-            if (method.isAnnotationPresent(Command.class)) {
-                String command = method.getAnnotation(Command.class).command();
-
-                if (inp.matches(command)) {
-                    String outString;
-                    try {
-                        outString = (String) method.invoke(currRoom);
-                        
-                        if(currClass.getSuperclass() != Room.class)
-                            currClass = currClass.getSuperclass();
-                        
-                        invokeSetText(uiMap.get(currClass), outString);
-                        
-                        boolean[] tempStates = (boolean[]) invokeMethod("getStates", logicMap.get(currClass), null, null);
-                        
-                        gameState.setLocalStates(tempStates);
-                        
-                        return outString;
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
-                    break;
-                }
-            }
-        }
-        
-        // BUG: return within the above checks does not exit the method which makes the code below execute replacing the ui text
-        invokeSetText(uiMap.get(GameState.getInstance().getCurrRoom().getClass()), "That did nothing. Type 'help' to see what you can do.");
-        
-        return "That did nothing. Type 'help' to see what you can do.";
+        //System.out.println(">>> " + lastInput);
+        return state.processInput(input, globalCommands);
     }
 
     public void paint() {
         add((Component) uiMap.get(GameState.getInstance().getCurrRoom().getClass()));
-        textField.addKeyListener(new TextFieldListener());
-        this.add(textField, BorderLayout.PAGE_END);
         this.validate();
     }
 
@@ -242,27 +150,31 @@ public class Drawer extends JFrame {
         return lastInput;
     }
 
-    private void invokeSetText(Object obj, String text) {
+    public void invokeSetText(Object obj, String text) {
         RoomComponent rc = (RoomComponent) obj;
         rc.setGameText(text);
         repaint();
         validate();
     }
-    
-    private static Object invokeEntry(Object obj) {
+
+    public Object invokeEntry(Object obj) {
         return invokeMethod("entry", obj, null, null);
     }
+
+    public State getCurrState() {
+        return state;
+    }
     
-    public void updateState(String[] localStates, Class currRoom) {	
-    		Class[] inpClass = {String[].class};
-    		Object[] inpArgs = {localStates};
-    		
-    		this.getContentPane().removeAll();
-    		invokeMethod("updateStates", logicMap.get(currRoom), inpClass, inpArgs);
-    		reset();
+    public void updateState(String[] localStates, Class currRoom) {
+        Class[] inpClass = {String[].class};
+        Object[] inpArgs = {localStates};
+
+        this.getContentPane().removeAll();
+        invokeMethod("updateStates", logicMap.get(currRoom), inpClass, inpArgs);
+        reset();
     }
 
-    private static Object invokeMethod(String method, Object obj, Class[] classes, Object[] args) {
+    public Object invokeMethod(String method, Object obj, Class[] classes, Object[] args) {
         try {
             Method m = obj.getClass().getMethod(method, classes);
             m.setAccessible(true); //line is unnecessary when method is not private
@@ -286,8 +198,9 @@ public class Drawer extends JFrame {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                if(GameState.getInstance().isDead())
+                if (GameState.getInstance().isDead()) {
                     System.exit(0);
+                }
                 //System.out.println(processInput(textField.getText()));
                 processInput(textField.getText());
                 textField.setText("");
@@ -299,15 +212,18 @@ public class Drawer extends JFrame {
             // TODO Auto-generated method stub
 
         }
-        
+
     }
 
-	public HashMap<Class, Object> getLogicMap() {
-		return logicMap;
-	}
-	
-	public void setState(State state) {
-		this.state = state;
-		state.setContext(this);
-	}
+    public HashMap<Class, Object> getLogicMap() {
+        return logicMap;
+    }
+    public HashMap<Class, Object> getUIMap() {
+        return uiMap;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+        state.setContext(this);
+    }
 }

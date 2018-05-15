@@ -7,7 +7,7 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="CS124MidtermProject_Habana_Ligunas" default="default" basedir=".">
+<project name="CS124FinalProject_Habana_Ligunas" default="default" basedir=".">
     <description>Builds, tests, and runs the project CS124MidtermProject_Habana_Ligunas.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--

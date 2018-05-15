@@ -1,4 +1,7 @@
-package main_package;
+package state;
+
+import main_package.Drawer;
+import main_package.GlobalCommands;
 
 public interface State {
 	public void setContext(Drawer runner);
